@@ -1,0 +1,90 @@
+groups:
+- name: cpurule
+  rules:
+#  - alert: highcpu
+#    expr: cpu_total > 2
+#    annotations:
+#      DESCRIPTION: 'it happened yeah'
+#      SUMMARY: 'it happened'
+  - alert: highcpu_master
+    expr: mesos_master_cpus_percent > 0.5
+    labels:
+      master: cpu
+    annotations:
+      DESCRIPTION: 'highcpu2 master cpu percent'
+      SUMMARY: 'high cpu usage more than 80percent'
+  - alert: highcpu_agent
+    expr: mesos_slave_cpus_percent > 0.7
+    labels:
+      slave: cpu
+    annotations:
+      DESCRIPTION: 'highcpu agent cpus percent'
+      SUMMARY: 'high cpu usage more than 90percent'
+- name: gpurules
+  rules:
+  - alert: highgpu_master
+    expr: mesos_master_gpus_percent > 0.6
+    labels:
+      master: gpu
+    annotations:
+      DESCRIPTION: 'highgpu master gpu percent'
+      SUMMARY: 'high gpu usage more than 60percent'
+  - alert: highgpu_slave
+    expr: mesos_slave_gpus_percent > 0.6
+    labels:
+      slave: gpu
+    annotations:
+      DESCRIPTION: 'highgpu agent gpu percent'
+      SUMMARY: 'high gpu usage more than 60percent'
+- name: memrules
+  rules:
+  - alert: highmem_master
+    expr: mesos_master_mem_percent > 0.60
+    labels:
+      master: memory
+    annotations:
+      DESCRIPTION: 'highmem master mem percent'
+      SUMMARY: 'high mem usage more than 60percent'
+  - alert: highmem_slave
+    expr: mesos_slave_mem_percent > 0.8
+    labels:
+      slave: memory
+    annotations:
+      DESCRIPTION: 'highmem agent mem percent'
+      SUMMARY: 'high mem usage more than 80percent'
+- name: diskrules
+  rules:
+  - alert: highdisk_master
+    expr: mesos_master_disk_percent > 0.60
+    labels:
+      master: disk
+    annotations:
+      DESCRIPTION: 'highdisk master disk percent'
+      SUMMARY: 'high disk usage more than 60percent'
+  - alert: highdisk_slave
+    expr: mesos_slave_disk_percent > 0.09
+    labels:
+      slave: disk
+    annotations:
+      DESCRIPTION: 'highdisk agent disk percent'
+      SUMMARY: 'high disk usage more than 80percent'
+- name: slaverules
+  rules:
+  - alert: slaveinactive_or_disconnected
+    expr: mesos_master_slaves_inactive > 0.0 or mesos_master_slaves_disconnected > 0.0
+    annotations:
+      DESCRIPTION: 'minimum one slave is unreachable'
+      SUMMARY: 'minimum one slave is unreachable'
+  - alert: slaveinactive
+    expr: mesos_master_slaves_inactive > 0.0
+    annotations:
+      DESCRIPTION: 'minimum one slave is inactive'
+      SUMMARY: 'minimum one slave is inactive'
+      
+  - alert: EndpointDown
+    expr: probe_success == 0
+    for: 10s
+    labels:
+      severity: "critical"
+    annotations:
+      SUMMARY: "Endpoint {{ $labels.instance }} down"
