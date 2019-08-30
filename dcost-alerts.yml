@@ -7,7 +7,7 @@ groups:
 #      DESCRIPTION: 'it happened yeah'
 #      SUMMARY: 'it happened'
   - alert: highcpu_master
-    expr: mesos_master_cpus_percent > 0.5
+    expr: mesos_master_cpus_percent > 0.1
     labels:
       master: cpu
     annotations:
